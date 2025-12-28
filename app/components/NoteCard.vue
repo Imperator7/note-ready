@@ -43,7 +43,7 @@ const toggleHistory = () => {
   <div class="bg-gray-200 rounded px-4 py-2">
     <div class="flex justify-between">
       <div v-show="!isEditing" class="flex gap-2 items-center">
-        <p class="px-2">
+        <p class="px-2 max-w-[50vw] wrap-break-word">
           {{ note.note }}
         </p>
         <v-btn
@@ -59,11 +59,11 @@ const toggleHistory = () => {
         </v-btn>
       </div>
       <div v-show="isEditing" class="flex gap-2 items-center">
-        <input
+        <textarea
           v-model="editingNote"
           type="text"
           placeholder="edit here"
-          class="px-2 field-sizing-content min-w-12.5 border rounded"
+          class="px-2 field-sizing-content min-w-12.5 border rounded max-w-[50vw] wrap-break-word"
           ref="editingNoteInput"
         />
         <v-btn
