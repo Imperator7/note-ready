@@ -1,4 +1,32 @@
-let notes: Note[] = []
+let notes: Note[] = [
+  {
+    id: '3b50a434-7c70-4c79-b5c8-73be09131c08',
+    author: 'John Doe',
+    note: 'ล้างจาน',
+    history: [],
+    createdAt: 1766957514544,
+    category: 'chore',
+  },
+  {
+    id: '701258c8-7ff3-4af6-a5ef-da1ef8b6c430',
+    author: 'John Doe',
+    note: 'เรียน pagination เเละ auth',
+    history: [
+      {
+        note: 'เรียน pagination',
+        category: 'study',
+        createdAt: 1766957524842,
+      },
+      {
+        note: 'เรียน pagination\nเรียน auth',
+        category: 'study',
+        createdAt: 1766957574043,
+      },
+    ],
+    createdAt: 1766957590830,
+    category: 'study',
+  },
+]
 
 export const useNoteService = () => {
   return {
