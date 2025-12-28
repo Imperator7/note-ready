@@ -16,7 +16,7 @@ const timeSince = (date: number): string => {
   const lastForSecond = (Date.now() - date) / 1000
 
   if (lastForSecond < 60) {
-    return `${Math.floor(lastForSecond / 60)}s ago`
+    return `${Math.floor(lastForSecond)}s ago`
   } else if (lastForSecond < 3600) {
     return `${Math.floor(lastForSecond / 60)}m ago`
   } else if (lastForSecond < 86400) {
