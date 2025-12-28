@@ -12,6 +12,20 @@ const { loggedIn } = useUserSession()
 
 const { removeNoteById, editNoteById } = useNote()
 
+const timeSince = (date: number): string => {
+  const lastForSecond = (Date.now() - date) / 1000
+
+  if (lastForSecond < 60) {
+    return `${Math.floor(lastForSecond / 60)}s ago`
+  } else if (lastForSecond < 3600) {
+    return `${Math.floor(lastForSecond / 60)}m ago`
+  } else if (lastForSecond < 86400) {
+    return `${Math.floor(lastForSecond / 3600)}h ago`
+  } else {
+    return `${Math.floor(lastForSecond / 86400)}d ago`
+  }
+}
+
 const editNote = (newNote?: string, category?: string) => {
   editNoteById({ id: props.note.id, note: newNote, category: category })
 }
@@ -28,7 +42,7 @@ const toggleHistory = () => {
 <template>
   <div class="bg-gray-200 rounded px-4 py-2">
     <div class="flex justify-between">
-      <div v-show="!isEditing" class="flex gap-2">
+      <div v-show="!isEditing" class="flex gap-2 items-center">
         <p class="px-2">
           {{ note.note }}
         </p>
@@ -44,7 +58,7 @@ const toggleHistory = () => {
           <Icon name="material-symbols:edit-outline" />
         </v-btn>
       </div>
-      <div v-show="isEditing" class="flex gap-2">
+      <div v-show="isEditing" class="flex gap-2 items-center">
         <input
           v-model="editingNote"
           type="text"
@@ -75,8 +89,10 @@ const toggleHistory = () => {
         </v-btn>
       </div>
 
-      <div class="flex gap-2">
-        <p>{{ note.author }}</p>
+      <div class="flex gap-2 items-center">
+        <p class="bg-white px-2 py-1 rounded font-medium">
+          {{ note.category }}
+        </p>
         <v-btn
           v-show="!showHistory"
           @click="toggleHistory"
@@ -96,12 +112,23 @@ const toggleHistory = () => {
     </div>
     <div
       :class="
-        [[showHistory ? 'p-2' : 'hidden'], 'bg-white m-2 p-2 rounded'].join(' ')
+        [[showHistory ? 'p-4' : 'hidden'], 'bg-white m-2 p-2 rounded'].join(' ')
       "
     >
-      <p>
-        เขียนเมื่อ:
-        {{ new Date(note.createdAt).toLocaleTimeString() }} วันที่
+      <div class="p-2 bg-blue-100 rounded">
+        <p class="font-medium">Edited history:</p>
+        <ul class="px-2">
+          <li v-if="note.history.length > 0" v-for="pastNote in note.history">
+            {{ timeSince(pastNote.createdAt) }}: {{ pastNote.note }}
+          </li>
+          <p v-else>No edits yet</p>
+        </ul>
+      </div>
+
+      <p class="rounded font-light">author: {{ note.author }}</p>
+      <p class="rounded font-light">
+        timestamp:
+        {{ new Date(note.createdAt).toLocaleTimeString() }}
         {{ new Date(note.createdAt).toLocaleDateString() }}
       </p>
     </div>
