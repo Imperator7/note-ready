@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'auth',
+})
+
 const { user, loggedIn } = useUserSession()
 
 const newNote = ref<string>('')
@@ -24,7 +28,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-[clamp(400px, 50%, 600px)] p-4 flex flex-col gap-4">
+  <div
+    v-if="loggedIn"
+    class="w-[clamp(400px, 50%, 600px)] p-4 flex flex-col gap-4"
+  >
     <div class="flex gap-4">
       <h2 class="text-xl font-bold">Notes</h2>
       <select
