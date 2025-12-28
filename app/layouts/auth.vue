@@ -1,18 +1,10 @@
-<script setup lang="ts">
-const { user, loggedIn, clear } = useUserSession()
-
-const handleLogOut = () => {
-  clear()
-}
-
-const name = user.value?.name ?? 'user'
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="min-h-screen flex flex-col">
     <header class="bg-sky-900 text-white h-16 flex items-center p-4">
       <div class="flex justify-between w-full">
-        <NuxtLink to="/" class="font-medium text-2xl">Note ready</NuxtLink>
+        <NuxtLink to="/" class="font-medium text-2xl">Note Easy</NuxtLink>
       </div>
     </header>
     <main class="flex-1 flex flex-col">

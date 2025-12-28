@@ -5,14 +5,14 @@ const handleLogOut = () => {
   clear()
 }
 
-const name = user.value?.name ?? ''
+const name = user.value?.name ?? 'user'
 </script>
 
 <template>
   <div class="min-h-screen flex flex-col">
     <header class="bg-sky-900 text-white h-16 flex items-center p-4">
       <div class="flex justify-between w-full">
-        <NuxtLink to="/" class="font-medium text-2xl">Note ready</NuxtLink>
+        <NuxtLink to="/" class="font-medium text-2xl">Note Easy</NuxtLink>
         <div v-show="!loggedIn" class="flex gap-4">
           <NuxtLink
             class="font-medium text-black rounded px-2 py-2 bg-white cursor-pointer"
@@ -21,7 +21,7 @@ const name = user.value?.name ?? ''
             Log in
           </NuxtLink>
           <NuxtLink
-            class="font-medium text-black rounded px-2 py-2 bg-green-400 cursor-pointer"
+            class="font-medium text-black rounded px-2 py-2 bg-green-600 cursor-pointer pointer-events-none"
             to="/auth/register"
           >
             Sign up
