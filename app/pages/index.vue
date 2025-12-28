@@ -3,7 +3,7 @@ const { user, loggedIn } = useUserSession()
 
 const newNote = ref<string>('')
 const category = ref<string>('work')
-const sortBy = ref<string>('Newest')
+const sortBy = ref<string>('Newest first')
 
 const { fetchNotes, createNote } = useNote()
 
@@ -32,8 +32,8 @@ onMounted(() => {
         class="border rounded px-1 cursor-pointer"
         v-model="sortBy"
       >
-        <option>Newest</option>
-        <option>Oldest</option>
+        <option>Newest first</option>
+        <option>Oldest first</option>
       </select>
     </div>
     <div v-show="loggedIn" class="flex gap-4">

@@ -9,7 +9,7 @@ const { notes } = useNote()
 
 const sortedNotes = computed(() => {
   return [...notes.value].sort((a, b) => {
-    if (props.sortBy === 'Newest') {
+    if (props.sortBy === 'Newest first') {
       return b.createdAt - a.createdAt
     } else {
       return a.createdAt - b.createdAt
