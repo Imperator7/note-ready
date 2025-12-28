@@ -3,6 +3,7 @@ const { user, loggedIn } = useUserSession()
 
 const newNote = ref<string>('')
 const category = ref<string>('work')
+const sortBy = ref<string>('Newest')
 
 const { fetchNotes, createNote } = useNote()
 
@@ -24,7 +25,17 @@ onMounted(() => {
 
 <template>
   <div class="w-[clamp(400px, 50%, 600px)] p-4 flex flex-col gap-4">
-    <h2 class="text-xl font-bold">Notes</h2>
+    <div class="flex gap-4">
+      <h2 class="text-xl font-bold">Notes</h2>
+      <select
+        name="category"
+        class="border rounded px-1 cursor-pointer"
+        v-model="sortBy"
+      >
+        <option>Newest</option>
+        <option>Oldest</option>
+      </select>
+    </div>
     <div v-show="loggedIn" class="flex gap-4">
       <input
         type="text"
@@ -58,6 +69,6 @@ onMounted(() => {
         </button>
       </div>
     </div>
-    <NoteList />
+    <NoteList :sort-by="sortBy" />
   </div>
 </template>
