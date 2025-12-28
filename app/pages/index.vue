@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const { user, loggedIn } = useUserSession()
+
 const newNote = ref<string>('')
+const category = ref<string>('work')
 
 const { fetchNotes, createNote } = useNote()
 
@@ -8,10 +10,11 @@ const addNote = () => {
   createNote({
     note: newNote.value,
     author: user.value?.name,
-    category: 'work',
+    category: category.value,
   })
 
   newNote.value = ''
+  category.value = 'work'
 }
 
 onMounted(() => {
@@ -29,6 +32,17 @@ onMounted(() => {
         class="border p-2 rounded"
         placeholder="Type here..."
       />
+      <select
+        name="category"
+        class="border rounded px-1 cursor-pointer"
+        v-model="category"
+      >
+        <option>work</option>
+        <option>study</option>
+        <option>rest</option>
+        <option>quote</option>
+        <option>chore</option>
+      </select>
       <div class="flex gap-2 items-center">
         <button
           class="p-2 bg-green-400 rounded cursor-pointer flex items-center"
