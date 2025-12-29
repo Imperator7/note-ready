@@ -3,6 +3,7 @@ const { user, loggedIn, clear } = useUserSession()
 
 const handleLogOut = () => {
   clear()
+  navigateTo('/auth/login')
 }
 
 const name = user.value?.name ?? 'user'
