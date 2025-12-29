@@ -23,7 +23,7 @@ const sortedNotes = computed(() => {
     v-if="notes.length !== 0"
     class="flex flex-col gap-2 w-[clamp(360px,80%,700px)]"
   >
-    <li v-for="note in sortedNotes">
+    <li v-for="note in sortedNotes" :key="note.id">
       <NoteCard :note="note" />
     </li>
   </ul>

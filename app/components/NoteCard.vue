@@ -6,7 +6,7 @@ const props = defineProps<Props>()
 
 const isEditing = ref<boolean>(false)
 const showHistory = ref<boolean>(false)
-const editingNote = ref<string>(props.note.note)
+const editingNote = ref<string>('')
 
 const { loggedIn } = useUserSession()
 
@@ -51,6 +51,7 @@ const toggleHistory = () => {
           class="cursor-pointer"
           @click="
             () => {
+              editingNote = note.note
               isEditing = true
             }
           "
@@ -64,7 +65,6 @@ const toggleHistory = () => {
           type="text"
           placeholder="edit here"
           class="px-2 field-sizing-content min-w-12.5 border rounded max-w-[50vw] wrap-break-word"
-          ref="editingNoteInput"
         />
         <v-btn
           class="cursor-pointer"
