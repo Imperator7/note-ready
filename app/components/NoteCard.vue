@@ -116,7 +116,7 @@ const toggleHistory = () => {
       "
     >
       <div class="p-2 bg-blue-100 rounded">
-        <p class="font-medium">Edited history:</p>
+        <p class="font-medium">Note history:</p>
         <ul class="px-2">
           <li v-if="note.history.length > 0" v-for="pastNote in note.history">
             {{ timeSince(pastNote.createdAt) }}: {{ pastNote.note }}
