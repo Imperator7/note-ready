@@ -9,6 +9,14 @@ const credentials = ref({
   password: '',
 })
 
+const copyText = async (toCopy: string) => {
+  try {
+    await navigator.clipboard.writeText(toCopy)
+  } catch (error) {
+    console.error('Failed to copy text.')
+  }
+}
+
 async function login() {
   try {
     await $fetch('/api/login', {
@@ -29,8 +37,24 @@ async function login() {
     <div class="-translate-y-20 flex flex-col gap-4">
       <div class="p-4 bg-amber-200 border border-amber-400 rounded">
         <p class="text-center font-bold">For demo only</p>
-        <p><span class="font-medium">email:</span> admin@admin.com</p>
-        <p><span class="font-medium">password:</span> password</p>
+        <p>
+          <span class="font-medium">email: </span>
+          <button
+            class="hover:underline cursor-pointer active:text-emerald-500"
+            @click="() => copyText('admin@admin.com')"
+          >
+            admin@admin.com
+          </button>
+        </p>
+        <p>
+          <span class="font-medium">password: </span>
+          <button
+            class="hover:underline cursor-pointer active:text-green-700"
+            @click="() => copyText('password')"
+          >
+            password
+          </button>
+        </p>
       </div>
       <form
         @submit.prevent="login"
