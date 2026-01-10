@@ -61,9 +61,9 @@ const confirmEditing = () => {
         <p class="px-2 max-w-[50vw] wrap-break-word">
           {{ note.note }}
         </p>
-        <v-btn v-show="loggedIn" class="cursor-pointer" @click="startEditing">
+        <button v-show="loggedIn" class="cursor-pointer" @click="startEditing">
           <Icon name="material-symbols:edit-outline" />
-        </v-btn>
+        </button>
       </div>
       <div v-show="isEditing" class="flex gap-2 items-center">
         <textarea
@@ -72,32 +72,34 @@ const confirmEditing = () => {
           placeholder="edit here"
           class="px-2 field-sizing-content min-w-12.5 border rounded max-w-[50vw] wrap-break-word"
         />
-        <v-btn class="cursor-pointer" @click="confirmEditing">
-          <Icon name="material-symbols:check" /> </v-btn
-        ><v-btn class="cursor-pointer" @click="stopEditing">
+        <button class="cursor-pointer" @click="confirmEditing">
+          <Icon name="material-symbols:check" /></button
+        ><button class="cursor-pointer" @click="stopEditing">
           <Icon name="material-symbols:close" />
-        </v-btn>
+        </button>
       </div>
 
       <div class="flex gap-2 items-center">
         <p class="bg-white px-2 py-1 rounded font-medium">
           {{ note.category }}
         </p>
-        <v-btn
+        <button
           v-show="!showHistory"
           @click="toggleHistory"
           class="cursor-pointer"
-          ><Icon name="material-symbols:keyboard-arrow-down" color="red-500"
-        /></v-btn>
-        <v-btn
+        >
+          <Icon name="material-symbols:keyboard-arrow-down" color="red-500" />
+        </button>
+        <button
           v-show="showHistory"
           @click="toggleHistory"
           class="cursor-pointer"
-          ><Icon name="material-symbols:keyboard-arrow-up" color="red-500"
-        /></v-btn>
-        <v-btn v-show="loggedIn" @click="removeNote()" class="cursor-pointer"
-          ><Icon name="material-symbols:close" color="red-500"
-        /></v-btn>
+        >
+          <Icon name="material-symbols:keyboard-arrow-up" color="red-500" />
+        </button>
+        <button v-show="loggedIn" @click="removeNote()" class="cursor-pointer">
+          <Icon name="material-symbols:close" color="red-500" />
+        </button>
       </div>
     </div>
     <div
