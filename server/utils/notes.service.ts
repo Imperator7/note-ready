@@ -28,9 +28,23 @@ let notes: Note[] = [
   },
 ]
 
+const PAGE_LIMIT: number = 10
+
 export const useNoteService = () => {
   return {
-    get: (id: string) => notes.find((note) => note.id === id),
+    getById: (id: string) => notes.find((note) => note.id === id),
+    getByPage: (page: number, limit: number = PAGE_LIMIT) => {
+      const startIndex = (page - 1) * limit
+      const endIndex = startIndex + limit
+
+      return notes.slice(startIndex, endIndex)
+    },
+    getMeta: (page: number) => ({
+      current_page: page,
+      total_pages: Math.ceil(notes.length / PAGE_LIMIT),
+      per_page: PAGE_LIMIT,
+      total_items: notes.length,
+    }),
     getAll: (): Note[] => notes,
     create: (note: string, category: string, author: string): Note => {
       const newNote = {
