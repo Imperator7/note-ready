@@ -1,6 +1,7 @@
 let notes: Note[] = [
   {
     id: '3b50a434-7c70-4c79-b5c8-73be09131c08',
+    userId: '2edbd5ea-cfd0-40f5-b946-656fceee8380',
     author: 'John Doe',
     note: 'ล้างจาน',
     history: [],
@@ -9,6 +10,7 @@ let notes: Note[] = [
   },
   {
     id: '701258c8-7ff3-4af6-a5ef-da1ef8b6c430',
+    userId: '2edbd5ea-cfd0-40f5-b946-656fceee8380',
     author: 'John Doe',
     note: 'เรียน pagination เเละ auth',
     history: [
@@ -28,15 +30,35 @@ let notes: Note[] = [
   },
 ]
 
+const PAGE_LIMIT: number = 10
+
 export const useNoteService = () => {
   return {
-    get: (id: string) => notes.find((note) => note.id === id),
+    getById: (id: string) => notes.find((note) => note.id === id),
+    getByPage: (page: number, limit: number = PAGE_LIMIT) => {
+      const startIndex = (page - 1) * limit
+      const endIndex = startIndex + limit
+
+      return notes.slice(startIndex, endIndex)
+    },
+    getMeta: (page: number) => ({
+      current_page: page,
+      total_pages: Math.ceil(notes.length / PAGE_LIMIT),
+      per_page: PAGE_LIMIT,
+      total_items: notes.length,
+    }),
     getAll: (): Note[] => notes,
-    create: (note: string, category: string, author: string): Note => {
+    create: (
+      note: string,
+      category: string,
+      author: string,
+      userId: string
+    ): Note => {
       const newNote = {
         id: crypto.randomUUID(),
-        author: author,
-        note: note,
+        userId,
+        author,
+        note,
         history: [],
         createdAt: Date.now(),
         category: category,
