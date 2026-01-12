@@ -19,7 +19,7 @@ const copyText = async (toCopy: string) => {
 
 async function login() {
   try {
-    await $fetch('/api/login', {
+    await $fetch('/api/auth/login', {
       method: 'POST',
       body: credentials.value,
     })
