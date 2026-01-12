@@ -9,11 +9,5 @@ export default defineEventHandler(async (event) => {
     return
   }
 
-  const session = await getUserSession(event)
-  if (!session.user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized request, please login and try again',
-    })
-  }
+  await requireUserSession(event)
 })
