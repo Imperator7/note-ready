@@ -6,6 +6,7 @@ export type HistoryNote = {
 
 export type Note = {
   id: string
+  userId: string
   author: string
   note: string
   history: HistoryNote[]
