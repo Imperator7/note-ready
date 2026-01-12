@@ -1,7 +1,9 @@
 import z from 'zod'
 
 export default defineEventHandler(async (event) => {
-  const { getAll: getNotes, getByPage, getMeta } = useNoteService()
+  const session = await requireUserSession(event)
+
+  const { getAll: getNotes, getByPage, getMeta } = useNoteService(session.user)
 
   const querySchema = z.object({
     page: z.coerce.number().int().positive().optional(),
