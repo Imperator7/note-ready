@@ -1,29 +1,10 @@
 <script setup lang="ts">
-interface NoteListProps {
-  sortBy: string
-}
-
-const props = defineProps<NoteListProps>()
-
-const { notes } = useNote()
-
-const sortedNotes = computed(() => {
-  return [...notes.value].sort((a, b) => {
-    if (props.sortBy === 'Newest first') {
-      return b.createdAt - a.createdAt
-    } else {
-      return a.createdAt - b.createdAt
-    }
-  })
-})
+const { noteState } = useNote()
 </script>
 
 <template>
-  <ul
-    v-if="notes.length !== 0"
-    class="flex flex-col gap-2 w-[clamp(360px,80%,700px)]"
-  >
-    <li v-for="note in sortedNotes" :key="note.id">
+  <ul v-if="noteState.notes.length !== 0" class="flex flex-col gap-2">
+    <li v-for="note in noteState.notes" :key="note.id">
       <NoteCard :note="note" />
     </li>
   </ul>
