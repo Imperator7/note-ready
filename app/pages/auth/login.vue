@@ -25,7 +25,7 @@ async function login() {
     })
 
     await refreshSession()
-    await navigateTo('/')
+    await navigateTo('/notes?page=1')
   } catch {
     alert('Bad credentials')
   }
