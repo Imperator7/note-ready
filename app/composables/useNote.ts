@@ -1,34 +1,84 @@
 export const useNote = () => {
-  const fetching = ref<boolean>(false)
-  const creating = ref<boolean>(false)
+  const route = useRoute()
+  const router = useRouter()
 
-  const notes = useState<Note[]>('notes', () => [])
+  type NoteState = {
+    creating: boolean
+    fetching: boolean
+    notes: Note[]
+    meta: {
+      totalPages: number
+      limit: number
+    }
+  }
+
+  const noteState = useState<NoteState>('notes-state', () => ({
+    creating: false,
+    fetching: false,
+    notes: [],
+    meta: {
+      totalPages: 0,
+      limit: 10,
+    },
+  }))
+
+  const page = computed({
+    get: () => Number(route.query.page) || 1,
+    set: (val) => {
+      router.replace({ query: { ...route.query, page: val } })
+    },
+  })
+
+  const sortBy = computed({
+    get: () => (route.query.sortBy as string) || 'Newest',
+    set: (val) => router.replace({ query: { ...route.query, sortBy: val } }),
+  })
+
+  watch([page, sortBy], () => {
+    fetchNotes()
+  })
+
+  const hasPrevious = computed(() => page.value > 1)
+  const hasMore = computed(() => page.value < noteState.value.meta.totalPages)
 
   const fetchNotes = async () => {
-    fetching.value = true
+    noteState.value.fetching = true
     try {
-      const { data } = await $fetch('/api/notes')
-      notes.value = data
-      console.log('Fetched', notes.value)
+      const response = await $fetch(`/api/notes`, {
+        query: {
+          page: page.value,
+          sortBy: sortBy.value,
+        },
+      })
+
+      if (!response.meta) {
+      }
+
+      noteState.value.notes = response.data
+      noteState.value.meta = {
+        totalPages: response.meta.total_pages,
+        limit: response.meta.per_page,
+      }
     } catch (error) {
       console.error(error)
     } finally {
-      fetching.value = false
+      noteState.value.fetching = false
     }
   }
 
   const createNote = async (payload: { note: string; category: string }) => {
-    creating.value = true
+    noteState.value.creating = true
     try {
-      const { data } = await $fetch('/api/notes', {
+      await $fetch('/api/notes', {
         method: 'POST',
         body: payload,
       })
-      notes.value.unshift(data)
+
+      await fetchNotes()
     } catch (error) {
       console.error(error)
     } finally {
-      creating.value = false
+      noteState.value.creating = false
     }
   }
 
@@ -38,7 +88,7 @@ export const useNote = () => {
         method: 'DELETE',
       })
 
-      notes.value = notes.value.filter((note) => note.id !== payload.id)
+      await fetchNotes()
     } catch (error) {
       console.error(error)
     }
@@ -50,7 +100,7 @@ export const useNote = () => {
     category?: string
   }) => {
     try {
-      const { data } = await $fetch(`/api/notes/${payload.id}`, {
+      await $fetch(`/api/notes/${payload.id}`, {
         method: 'PATCH',
         body: {
           note: payload.note,
@@ -58,21 +108,21 @@ export const useNote = () => {
         },
       })
 
-      notes.value = notes.value.map((note) =>
-        note.id === data.id ? data : note
-      )
+      await fetchNotes()
     } catch (error) {
       console.error(error)
     }
   }
 
   return {
-    notes,
+    noteState,
     fetchNotes,
-    fetching,
     createNote,
-    creating,
     removeNoteById,
     editNoteById,
+    hasMore,
+    hasPrevious,
+    page,
+    sortBy,
   }
 }
