@@ -40,11 +40,20 @@ export const useNoteService = (user: User) => {
   return {
     getById: (id: string) =>
       notes.find((note) => note.id === id && note.userId === user.userId),
-    getByPage: (page: number, limit: number = PAGE_LIMIT) => {
+    getByPage: (
+      page: number,
+      sortBy: string = 'newest',
+      limit: number = PAGE_LIMIT,
+    ) => {
       const startIndex = (page - 1) * limit
       const endIndex = startIndex + limit
 
-      return getUserNotes().slice(startIndex, endIndex)
+      const userNotes = getUserNotes()
+      if (sortBy.toLowerCase() === 'newest') {
+        userNotes.sort((a, b) => b.createdAt - a.createdAt)
+      }
+
+      return userNotes.slice(startIndex, endIndex)
     },
     getMeta: (page: number) => {
       const userNotes = getUserNotes()
@@ -81,7 +90,7 @@ export const useNoteService = (user: User) => {
       }
 
       const targetNoteIndex = notes.findIndex(
-        (note) => note.id === id && note.userId === user.userId
+        (note) => note.id === id && note.userId === user.userId,
       )
 
       if (targetNoteIndex === -1) {
@@ -108,7 +117,7 @@ export const useNoteService = (user: User) => {
     },
     remove: (id: string) => {
       const index = notes.findIndex(
-        (note) => note.id === id && note.userId === user.userId
+        (note) => note.id === id && note.userId === user.userId,
       )
 
       if (index !== -1) {
