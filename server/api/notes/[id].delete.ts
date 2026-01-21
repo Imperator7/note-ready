@@ -1,11 +1,14 @@
 export default defineEventHandler(async (event) => {
   const { id } = getRouterParams(event)
+  const session = await requireUserSession(event)
 
-  const { remove: deleteNote, get: getNote } = useNoteService()
+  const { remove: deleteNote, getById: getNoteById } = useNoteService(
+    session.user,
+  )
 
   deleteNote(id)
 
-  const targetNote = getNote(id)
+  const targetNote = getNoteById(id)
 
   if (targetNote) {
     return {

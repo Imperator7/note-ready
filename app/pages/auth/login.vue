@@ -19,13 +19,13 @@ const copyText = async (toCopy: string) => {
 
 async function login() {
   try {
-    await $fetch('/api/login', {
+    await $fetch('/api/auth/login', {
       method: 'POST',
       body: credentials.value,
     })
 
     await refreshSession()
-    await navigateTo('/')
+    await navigateTo('/notes?page=1')
   } catch {
     alert('Bad credentials')
   }

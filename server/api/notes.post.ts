@@ -1,15 +1,16 @@
 import z from 'zod'
 
 export default defineEventHandler(async (event) => {
-  const { create: createNote } = useNoteService()
+  const session = await requireUserSession(event)
+
+  const { create: createNote } = useNoteService(session.user)
 
   const postBodySchema = z.object({
     note: z.string().min(1),
-    author: z.string().min(1),
     category: z.string().min(1),
   })
 
-  const { note, author, category } = await readValidatedBody(
+  const { note, category } = await readValidatedBody(
     event,
     postBodySchema.parse
   )
@@ -17,6 +18,6 @@ export default defineEventHandler(async (event) => {
   return {
     success: true,
     status: 201,
-    data: createNote(note, category, author),
+    data: createNote(note, category),
   }
 })

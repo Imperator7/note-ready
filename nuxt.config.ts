@@ -5,6 +5,15 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
   modules: ['@nuxt/icon', 'nuxt-auth-utils'],
+  runtimeConfig: {
+    session: {
+      password: '',
+      name: 'nuxt-auth',
+      cookie: {
+        maxAge: 60 * 24 * 7,
+      },
+    },
+  },
   vite: {
     plugins: [tailwindcss()],
   },

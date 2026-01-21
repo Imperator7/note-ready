@@ -1,7 +1,9 @@
 import z from 'zod'
 
 export default defineEventHandler(async (event) => {
-  const { update: updateNote } = useNoteService()
+  const session = await requireUserSession(event)
+
+  const { update: updateNote } = useNoteService(session.user)
 
   const { id } = getRouterParams(event)
 
@@ -12,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   const { note, category } = await readValidatedBody(
     event,
-    patchBodySchema.parse
+    patchBodySchema.parse,
   )
 
   return {

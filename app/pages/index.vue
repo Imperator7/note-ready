@@ -2,35 +2,20 @@
 definePageMeta({
   middleware: 'auth',
 })
-
-const { loggedIn } = useUserSession()
-
-const sortBy = ref<string>('Newest first')
-
-const { fetchNotes } = useNote()
-
-onMounted(() => {
-  fetchNotes()
-})
 </script>
 
 <template>
   <div
-    v-if="loggedIn"
-    class="w-[clamp(400px, 50%, 600px)] p-4 flex flex-col gap-4"
+    class="min-h-screen flex flex-col justify-center items-center gap-6 bg-gray-50"
   >
-    <div class="flex gap-4">
-      <h2 class="text-xl font-bold">Notes</h2>
-      <select
-        name="category"
-        class="border rounded px-1 cursor-pointer"
-        v-model="sortBy"
-      >
-        <option>Newest first</option>
-        <option>Oldest first</option>
-      </select>
-    </div>
-    <NoteCreateForm />
-    <NoteList :sort-by="sortBy" />
+    <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight">
+      Welcome to Note Easy
+    </h1>
+    <button
+      class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1 cursor-pointer"
+      @click="navigateTo('/notes?page=1')"
+    >
+      Start noting now
+    </button>
   </div>
 </template>

@@ -1,6 +1,9 @@
+import { User } from '#auth-utils'
+
 let notes: Note[] = [
   {
     id: '3b50a434-7c70-4c79-b5c8-73be09131c08',
+    userId: '2edbd5ea-cfd0-40f5-b946-656fceee8380',
     author: 'John Doe',
     note: 'ล้างจาน',
     history: [],
@@ -9,6 +12,7 @@ let notes: Note[] = [
   },
   {
     id: '701258c8-7ff3-4af6-a5ef-da1ef8b6c430',
+    userId: '2edbd5ea-cfd0-40f5-b946-656fceee8380',
     author: 'John Doe',
     note: 'เรียน pagination เเละ auth',
     history: [
@@ -28,15 +32,46 @@ let notes: Note[] = [
   },
 ]
 
-export const useNoteService = () => {
+const PAGE_LIMIT: number = 10
+
+export const useNoteService = (user: User) => {
+  const getUserNotes = () => notes.filter((note) => note.userId === user.userId)
+
   return {
-    get: (id: string) => notes.find((note) => note.id === id),
-    getAll: (): Note[] => notes,
-    create: (note: string, category: string, author: string): Note => {
+    getById: (id: string) =>
+      notes.find((note) => note.id === id && note.userId === user.userId),
+    getByPage: (
+      page: number,
+      sortBy: string = 'newest',
+      limit: number = PAGE_LIMIT,
+    ) => {
+      const startIndex = (page - 1) * limit
+      const endIndex = startIndex + limit
+
+      const userNotes = getUserNotes()
+      if (sortBy.toLowerCase() === 'newest') {
+        userNotes.sort((a, b) => b.createdAt - a.createdAt)
+      }
+
+      return userNotes.slice(startIndex, endIndex)
+    },
+    getMeta: (page: number) => {
+      const userNotes = getUserNotes()
+
+      return {
+        current_page: page,
+        total_pages: Math.ceil(userNotes.length / PAGE_LIMIT),
+        per_page: PAGE_LIMIT,
+        total_items: userNotes.length,
+      }
+    },
+    getAll: (): Note[] => getUserNotes(),
+    create: (note: string, category: string): Note => {
       const newNote = {
         id: crypto.randomUUID(),
-        author: author,
-        note: note,
+        userId: user.userId,
+        author: user.name,
+        note,
         history: [],
         createdAt: Date.now(),
         category: category,
@@ -54,7 +89,9 @@ export const useNoteService = () => {
         })
       }
 
-      const targetNoteIndex = notes.findIndex((note) => note.id === id)
+      const targetNoteIndex = notes.findIndex(
+        (note) => note.id === id && note.userId === user.userId,
+      )
 
       if (targetNoteIndex === -1) {
         throw createError({ statusCode: 404, statusMessage: 'Not found' })
@@ -79,7 +116,13 @@ export const useNoteService = () => {
       return editedNote
     },
     remove: (id: string) => {
-      notes = notes.filter((note) => note.id !== id)
+      const index = notes.findIndex(
+        (note) => note.id === id && note.userId === user.userId,
+      )
+
+      if (index !== -1) {
+        notes.splice(index, 1)
+      }
     },
   }
 }

@@ -6,9 +6,13 @@ const newNote = ref<string>('')
 const category = ref<string>('work')
 
 const addNote = () => {
+  if (!user.value) {
+    console.error('User is not authenticated')
+    return
+  }
+
   createNote({
     note: newNote.value,
-    author: user.value?.name,
     category: category.value,
   })
 
