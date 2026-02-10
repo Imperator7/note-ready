@@ -4,6 +4,7 @@ interface Props {
 }
 const props = defineProps<Props>()
 
+const now = ref(Date.now())
 const isEditing = ref<boolean>(false)
 const showHistory = ref<boolean>(false)
 const editingNote = ref<string>('')
@@ -13,7 +14,7 @@ const { loggedIn } = useUserSession()
 const { removeNoteById, editNoteById } = useNote()
 
 const timeSince = (date: number): string => {
-  const lastForSecond = (Date.now() - date) / 1000
+  const lastForSecond = (now.value - date) / 1000
 
   if (lastForSecond < 60) {
     return `${Math.floor(lastForSecond)}s ago`
@@ -52,6 +53,16 @@ const confirmEditing = () => {
   editNote(editingNote.value, undefined)
   isEditing.value = false
 }
+
+let timer: NodeJS.Timeout | undefined
+
+onMounted(() => {
+  timer = setInterval(() => {
+    now.value = Date.now()
+  }, 1000)
+})
+
+onUnmounted(() => clearInterval(timer))
 </script>
 
 <template>
@@ -103,26 +114,38 @@ const confirmEditing = () => {
       </div>
     </div>
     <div
-      :class="
-        [[showHistory ? 'p-4' : 'hidden'], 'bg-white m-2 p-2 rounded'].join(' ')
-      "
+      class="grid transition-[grid-template-rows] duration-500 ease-out"
+      :class="showHistory ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
     >
-      <div class="p-2 bg-blue-100 rounded">
-        <p class="font-medium">Note history:</p>
-        <ul v-if="note.history.length > 0" class="px-2">
-          <li v-for="pastNote in note.history" :key="pastNote.createdAt">
-            {{ timeSince(pastNote.createdAt) }}: {{ pastNote.note }}
-          </li>
-        </ul>
-        <p v-else>No edits yet</p>
-      </div>
+      <div class="overflow-hidden">
+        <div class="bg-white m-2 p-4 rounded border border-gray-100 shadow-sm">
+          <div class="p-2 bg-blue-100 rounded mb-2">
+            <p class="font-medium mb-1">Note history:</p>
 
-      <p class="rounded font-light">author: {{ note.author }}</p>
-      <p class="rounded font-light">
-        timestamp:
-        {{ new Date(note.createdAt).toLocaleTimeString() }}
-        {{ new Date(note.createdAt).toLocaleDateString() }}
-      </p>
+            <ClientOnly>
+              <ul v-if="note.history?.length" class="px-2 list-disc ml-4">
+                <li v-for="pastNote in note.history" :key="pastNote.createdAt">
+                  <span class="font-mono text-sm text-gray-600">
+                    {{ timeSince(pastNote.createdAt) }}:
+                  </span>
+                  {{ pastNote.note }}
+                </li>
+              </ul>
+
+              <p v-else class="text-gray-500 text-sm">No edits yet</p>
+
+              <template #fallback>
+                <p class="text-gray-400 text-sm">Loading editing history...</p>
+              </template>
+            </ClientOnly>
+          </div>
+
+          <p class="text-xs text-gray-500">Author: {{ note.author }}</p>
+          <p class="text-xs text-gray-500">
+            Created: {{ new Date(note.createdAt).toLocaleString() }}
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
